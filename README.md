@@ -1,6 +1,22 @@
-# 拍照计算边缘长
+# 拍照计算边缘周长
 
 ## 1 简介
+
+edgelen是一个通过图片识别出周长的工具，比如可以封装在APP中。
+
+![app1](images/app1.png)
+
+分别在输入框中输入背景的长与宽，选择背景的颜色，待测物的颜色，确定后
+
+![app2](images/app2.png)
+
+选择拍照，拍照确定后，会显示相应的长度。
+
+
+
+edgelen是根据待测物在参考背景中的位置关系以及参考背景的尺寸（长宽），计算出待测物的周长。
+
+
 
 ## 2 实现思路
 
@@ -12,9 +28,29 @@
 
 原始图像查看：
 
-[]: https://github.com/changhaili/edgelen/blob/master/images/naive.JPG	"原始图像"
+[原始图像]: https://github.com/changhaili/edgelen/blob/master/images/naive.JPG
 
-背景为一张红纸，需要识别出三张白纸的边长。
+参考背景为一张红纸，本示例需要识别出三张白纸的周长。
+
+红纸的长宽为：1052 * 730； 单位为毫米，手工软布尺测量，稍有误差。
+
+最后识别出三张白纸的周长分别为：1015.7，519.2，1255.9 。 手工软布尺测量1015.5-， 518.5-，1254.5+，误差小于 0.2 %
+
+也可进行如下精度推理：
+
+1. 考虑到A4 大小标准为 297* 210， 即周长为 1014，误差小于0.2%。
+
+2. 右侧两个图形是由一张A4纸剪出，则可以中间图形的周长推导出右侧图形的周长：
+
+   中间白纸规则部分（即图形的左侧垂边，A4纸边）长度为139，则不规则部分为 519.2-139 = 380.2
+
+   最右侧图形的周长可以计算出：1014 -139 + 380.2 = 1255.2 
+
+   误差也小于 0.2%
+
+
+
+当每两像素采样取点时，结果计算为1016.9， 519.2，1251.7，误差小于0.4%，运行速度得到了提升。
 
 
 
@@ -26,6 +62,8 @@
 
 这里背景为红纸，即红色
 
+
+
 #### 2.2.2 对背景进行聚类
 
 目前实现了层次聚类和密度聚类，目前密度聚类实现的速度和性能都优于层次聚类 ，但内存使用还有待优化。
@@ -35,6 +73,8 @@
 为了减少内存占用，背景只读取上下左右指定宽度的边框。
 
 因为光照等原因，会有大量的错误象素，使得聚类会产生多个聚族，选择像素点最多的聚族为背景图像。实际情况中背景聚类拥有的象素点数量远远多于错误聚类的象素点。
+
+
 
 #### 2.2.3 计算上下左右四角
 
@@ -78,6 +118,8 @@
 
 目前要求待测物的颜色是一样。
 
+
+
 #### 2.3.2 聚类
 
 同背景聚类一样，可以使用密度聚类或层次聚类。
@@ -98,9 +140,9 @@
 
 #### 2.3.4 将图形边缘点生成多段线
 
-1. ​
-
 ### 2.4 计算边框长度
+
+B样条插值
 
 
 
@@ -134,4 +176,75 @@ B样条插值
 
 
 
-## 4 样例
+## 4 示例代码
+
+
+
+Maven配置了是使用Java 1.7，一些1.8的新特性还无法使用
+
+以下代码在 GirthTest.java 文件中，可以指定一张新图片，运行该测试用用例
+
+
+
+```java
+// 运行时，下面四行赋值需要修改
+
+String imgPath = "/Users/lichanghai/Mine/edgelen/images/naive.jpg";
+    
+SupportColor backColor = SupportColor.Red;
+SupportColor foreColor = SupportColor.White;
+int clusterCount = 3;
+
+final BufferedImage img = ImageIO.read(new File(imgPath));
+
+final int width = img.getWidth();
+final int height = img.getHeight();
+
+final int[] pixels = new int[width * height];
+img.getRGB(0, 0, img.getWidth(), img.getHeight(), pixels, 0, width);
+
+ImagePixelHolder pixelHolder = new ImagePixelHolder(1, new PixelImage() {
+
+  @Override
+  public int getWidth() {
+    return width;
+  }
+
+  @Override
+  public int getHeight() {
+    return height;
+  }
+
+  @Override
+  public int getColor(int x, int y) {
+    return pixels[y * width+x];
+  }
+});
+
+EdgeCurve[] curves  = LatticeUtils.getEdgeCurves(pixelHolder, 1052, 730,
+                                                 backColor, foreColor, clusterCount, false);
+
+for (EdgeCurve curve : curves) {
+
+  GirthResult result = curve.getGirth();
+
+  System.out.println("default : " + result.getRecommender());
+
+  for (double d : result.getOthers()) {
+    System.out.println("girth : " + d);
+  }
+}
+```
+
+
+
+
+
+## 5 一些问题
+
+### 5.1 透视引起的精度问题
+
+1. 目前没有考虑透视影响。为了实现方面，该项目本质是只是在平面上进行处理。透视需要考虑到三维空间的问题，比较麻烦。
+2. 只要不是手机放得过于倾斜，透视带来的影响很小，几乎可以忽略。
+
+### 5.2
