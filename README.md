@@ -12,7 +12,7 @@
 
 原始图像查看：
 
-[]: images/naive.jpg	"原始图像"
+[]: https://github.com/changhaili/edgelen/blob/master/images/naive.JPG	"原始图像"
 
 背景为一张红纸，需要识别出三张白纸的边长。
 
