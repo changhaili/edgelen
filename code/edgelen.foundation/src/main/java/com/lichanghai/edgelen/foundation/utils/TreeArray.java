@@ -5,6 +5,9 @@ import java.util.function.Supplier;
 
 /**
  * Created by lichanghai on 2018/2/13.
+ *
+ * 试验品，还没经过测试
+ *
  */
 @Deprecated
 public class TreeArray<T> {

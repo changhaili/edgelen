@@ -10,6 +10,8 @@ import java.util.*;
  * Created by lichanghai on 2018/1/12.
  * <p>
  * 层次聚类
+ *
+ * 建议使用层次聚类 #DensityCluster
  */
 public class HierarchyCluster implements Cluster {
 

@@ -22,12 +22,12 @@ public class GirthTest {
 
         // String pre = imgPath.substring(0, imgPath.lastIndexOf(".")) + ".";
 
-        String imgPath = "/Users/lichanghai/BaiduNetDisk/1.jpg";
+        String imgPath = "/Users/lichanghai/Mine/edgelen/images/naive.jpg";
         //String imgPath = "/Users/lichanghai/Mine/die/1.jpg";
 
         SupportColor backColor = SupportColor.Red;
         SupportColor foreColor = SupportColor.White;
-        int clusterCount = 2;
+        int clusterCount = 3;
 
         final BufferedImage img = ImageIO.read(new File(imgPath));
 
@@ -57,7 +57,6 @@ public class GirthTest {
             @Override
             public int getColor(int x, int y) {
 
-
                 return pixels[y * width+x];
 
                 //return img.getRGB(x, y);
@@ -65,7 +64,7 @@ public class GirthTest {
         });
 
         EdgeCurve[] curves  = LatticeUtils.getEdgeCurves(pixelHolder, 1052, 730,
-                 backColor, foreColor, clusterCount, true);
+                 backColor, foreColor, clusterCount, false);
 
         timeRecord.forceRecord("hierical time: {0}");
 

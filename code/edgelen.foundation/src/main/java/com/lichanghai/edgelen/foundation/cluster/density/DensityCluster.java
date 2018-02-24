@@ -8,12 +8,11 @@ import com.lichanghai.edgelen.foundation.utils.IntList;
 import java.util.*;
 
 /**
- * Created by lichanghai on 2018/1/15.
- * <p>
- * 密度聚类
- * 建议使用层次聚类 HierarchyCluster
- * <p>
- * DensityCluster 速度目前略快于HierarchyCluster，但消耗更多的内存
+ * Created by lichanghai on 2018/1/25.
+ *
+ * 伪密度聚类（目前距离为1为密度可达）
+ *
+ * DensityCluster 速度，精度目前都略快于HierarchyCluster，内存还有待优化
  */
 public class DensityCluster implements Cluster {
 
@@ -32,8 +31,6 @@ public class DensityCluster implements Cluster {
     public int getHeight() {
         return sourcePixels.getHeight();
     }
-
-
 
     /**
      * 聚类
@@ -59,7 +56,6 @@ public class DensityCluster implements Cluster {
             int index = pixels[i];
             int x = sourcePixels.getX(index);
             int y = sourcePixels.getY(index);
-
 
             if (!sourcePixels.hasPixel(x, y))
                 continue;

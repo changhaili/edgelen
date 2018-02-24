@@ -7,10 +7,12 @@ import com.lichanghai.edgelen.foundation.pixelholder.AbstractPixelHolder;
 import com.lichanghai.edgelen.foundation.pixelholder.AllPixelHolder;
 import com.lichanghai.edgelen.foundation.pixelholder.ImagePixelHolder;
 import com.lichanghai.edgelen.foundation.pixelholder.IndexPixelHolder;
+import com.lichanghai.edgelen.foundation.utils.ImageUtils;
 import com.lichanghai.edgelen.foundation.utils.IntList;
 import com.lichanghai.edgelen.foundation.utils.IntegerFilter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.BitSet;
 import java.util.List;
 
@@ -169,23 +171,15 @@ public class LatticeUtils {
                                                  final SupportColor backColor,
                                                  double realWidth, double realHeight) {
 
-//        AbstractPixelHolder allPixelHolder = new AllPixelHolder(width, height, pixelColors, new IntegerFilter() {
-//            @Override
-//            public boolean isSatisfied(int i) {
-//                return backColor.isSame(pixelColors[i]);
-//            }
-//        });
 
-                //getBackPixels(width, height, pixelColors, backColor);
-
-        IntList backBorderPixels = getBackBorders(imagePixelHolder, backColor, 20);
+        IntList backBorderPixels = getBackBorders(imagePixelHolder, backColor, 100);
 
         TimeRecord timeRecord = TimeRecord.begin();
 
         AbstractPixelHolder pixelHolder = new DensityCluster(new IndexPixelHolder(imagePixelHolder.getWidth(),
-                imagePixelHolder.getHeight() ,backBorderPixels)).cluster(1)[0]; // TODO size
+                imagePixelHolder.getHeight(), backBorderPixels)).cluster(1)[0]; // TODO size
 
-        //drawLine("/Users/lichanghai/BaiduNetDisk/0005.jpg", pixelHolder);
+        ImageUtils.drawPoints("/Users/lichanghai/Mine/edgelen/images/back_cluster.jpg", pixelHolder);
 
         timeRecord.record("cluster background time:{0}");
 
@@ -208,11 +202,11 @@ public class LatticeUtils {
 
         Rect4i rotatedRectangle = getRotatedRectangle(rotateClock, pixelHolder.getWidth(), pixelHolder.getHeight());
 
-        Point3[] leftPoints = new Point3[rotatedRectangle.getHeight()];
+        final Point3[] leftPoints = new Point3[rotatedRectangle.getHeight()];
         //Point3[] rightPoints = new Point3[rotatedRectangle.getHeight()];
 
-        Point3[] topPoints = new Point3[rotatedRectangle.getWidth()];
-        Point3[] bottomPoints = new Point3[rotatedRectangle.getWidth()];
+        final Point3[] topPoints = new Point3[rotatedRectangle.getWidth()];
+        final Point3[] bottomPoints = new Point3[rotatedRectangle.getWidth()];
 
         for (int i = 0; i < pixels.length; i++) {
 
@@ -237,6 +231,14 @@ public class LatticeUtils {
 
         }
 
+        ImageUtils.drawPoints("/Users/lichanghai/Mine/edgelen/images/rotate_45.jpg", new ArrayList<Point3>() {
+            {
+                addAll(Arrays.asList(topPoints));
+                addAll(Arrays.asList(bottomPoints));
+            }
+        });
+
+
         Point3 topPoint = null;
         for (int i = 0; i < leftPoints.length; i++) {
             if (leftPoints[i] != null) {
@@ -252,6 +254,7 @@ public class LatticeUtils {
                 break;
             }
         }
+
 
         timeRecord.record("getAt background borders:{0}");
 
@@ -289,8 +292,16 @@ public class LatticeUtils {
         Point3 leftBottom = MathUtils.getIntersectPoint(m3[0], -1, m3[1],
                 m4[0], -1, m4[1]);
 
-        Matrix3 rotateWise = MathUtils.getRotateMatrix(new Point3(pixelHolder.getWidth() / 2, pixelHolder.getHeight() / 2), Math.PI / 4);
+        Point3 rightBottom = MathUtils.getIntersectPoint(m2[0], -1, m2[1],
+                m3[0], -1, m3[1]);
 
+        ImageUtils.drawLines("/Users/lichanghai/Mine/edgelen/images/lines.jpg",
+                leftTop,rightTop,
+                leftTop, leftBottom,
+                rightBottom,rightTop,
+                rightBottom, leftBottom);
+
+        Matrix3 rotateWise = MathUtils.getRotateMatrix(new Point3(pixelHolder.getWidth() / 2, pixelHolder.getHeight() / 2), Math.PI / 4);
 
         Point3 nLeftTop = MathUtils.transform(rotateWise, leftTop);
         Point3 nRightTop = MathUtils.transform(rotateWise, rightTop);
@@ -299,7 +310,6 @@ public class LatticeUtils {
         Matrix3 coordinateMatrix = MathUtils.getCoordinateMatrix2D(nLeftTop, nRightTop, nLeftBottom, realWidth, realHeight);
 
         timeRecord.record("linear regression: {0}");
-
 
         return new BackgroundState(coordinateMatrix, naiveLeftBorders, naiveRightBorders, pixelHolder.getWidth(), pixelHolder.getHeight());
     }
@@ -322,9 +332,9 @@ public class LatticeUtils {
         TimeRecord timeRecord = TimeRecord.begin();
 
         imagePixels.attachFilter(new IntegerFilter() {
+
             @Override
             public boolean isSatisfied(int i) {
-
 
                 int x = backgroundState.getX(i);
                 int y = backgroundState.getY(i);
@@ -339,9 +349,7 @@ public class LatticeUtils {
 
                 return x >= left && x <= right;
             }
-
         });
-
 
         AbstractPixelHolder[] pixelHolders;
         if (!hierarchyCluster) {
@@ -350,6 +358,8 @@ public class LatticeUtils {
             pixelHolders = new HierarchyCluster(imagePixels).cluster(clusterCount);
         }
 
+        ImageUtils.drawPoints("/Users/lichanghai/Mine/edgelen/images/fore_clusters.jpg", pixelHolders);
+
         timeRecord.record("cluster time: {0}");
 
         EdgeCurve[] edgeHolders = new EdgeCurve[pixelHolders.length];
@@ -357,6 +367,8 @@ public class LatticeUtils {
         for (int i = 0; i < edgeHolders.length; i++) {
 
             AbstractPixelHolder group = getEdgeBorders(pixelHolders[i]);
+
+            ImageUtils.drawPoints("/Users/lichanghai/Mine/edgelen/images/fore_edge_" +i+".jpg", group);
 
             EdgeScanner scanner = new EdgeScanner(group);
 

@@ -189,7 +189,7 @@ public class MathUtils {
         for (Point3 pnt : pnts) {
 
             if (pnt == null) {
-                "".toCharArray();
+               continue;
             }
 
             int x = (int) pnt.x;
