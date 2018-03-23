@@ -39,7 +39,7 @@ public class GirthTest {
 
         TimeRecord timeRecord = TimeRecord.begin();
 
-        ImagePixelHolder pixelHolder = new ImagePixelHolder(2, new PixelImage() {
+        ImagePixelHolder pixelHolder = new ImagePixelHolder(1, new PixelImage() {
 
             private int [] rows;
             private int curRow = -1;
@@ -63,22 +63,13 @@ public class GirthTest {
             }
         });
 
+
         EdgeCurve[] curves  = LatticeUtils.getEdgeCurves(pixelHolder, 1052, 730,
-                 backColor, foreColor, clusterCount, false);
+                //new KmeansColorSeparator(pixelHolder, 100000)
+                new AbsoluteColorSeparator(backColor, foreColor)
+              , clusterCount, false);
 
         timeRecord.forceRecord("hierical time: {0}");
-
-//
-//        curves = new LatticeUtils().getEdgeCurves(width, height, 1052, 730,
-//                pixels, backColor, foreColor, clusterCount, false);
-//
-//        timeRecord.record("enctpy time: {0}");
-
-
-//        curves = new LatticeUtils().getEdgeCurves(width, height, 1052, 730,
-//                pixels, SupportColor.Red, SupportColor.White, clusterCount, true);
-//
-//        timeRecord.forceRecord("hierical time: {0}");
 
 
         for (EdgeCurve curve : curves) {

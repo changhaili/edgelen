@@ -1,13 +1,11 @@
-package com.lichanghai.edgelen.foundation.math;
-
-import com.lichanghai.edgelen.foundation.ColorFilter;
+package com.lichanghai.edgelen.foundation;
 
 /**
- * Created by lichanghai on 2018/2/10.
+ * Created by lichanghai on 2018/3/22.
  */
-public enum SupportColor implements ColorFilter {
+public abstract class PixelColorFilter implements ColorFilter {
 
-    Red {
+    public final static PixelColorFilter Red = new PixelColorFilter() {
         @Override
         public boolean isSame(int color) {
 
@@ -18,9 +16,9 @@ public enum SupportColor implements ColorFilter {
             return isSingleCompSame(r, g, b);
 
         }
-    },
+    };
 
-    Green {
+    public final static PixelColorFilter Green = new PixelColorFilter() {
         @Override
         public boolean isSame(int color) {
 
@@ -30,10 +28,9 @@ public enum SupportColor implements ColorFilter {
 
             return isSingleCompSame(g, b, r);
         }
-    },
+    };
 
-
-    Blue {
+    public final static PixelColorFilter Blue = new PixelColorFilter() {
         @Override
         public boolean isSame(int color) {
 
@@ -43,10 +40,9 @@ public enum SupportColor implements ColorFilter {
 
             return isSingleCompSame(b, r, g);
         }
-    },
+    };
 
-
-    White {
+    public final static PixelColorFilter White = new PixelColorFilter() {
         @Override
         public boolean isSame(int color) {
 
@@ -59,9 +55,10 @@ public enum SupportColor implements ColorFilter {
 
             return true;
         }
-    },
+    };
 
-    Yellow {
+    public final static PixelColorFilter Yellow = new PixelColorFilter() {
+
         @Override
         public boolean isSame(int color) {
 
@@ -78,9 +75,9 @@ public enum SupportColor implements ColorFilter {
 
             return true;
         }
-    },
+    };
 
-    Black {
+    public final static PixelColorFilter Black = new PixelColorFilter() {
         @Override
         public boolean isSame(int color) {
 
@@ -93,9 +90,7 @@ public enum SupportColor implements ColorFilter {
 
             return true;
         }
-    },
-
-    ;
+    };
 
     protected boolean isSingleCompSame(int main, int other1, int other2) {
 
@@ -119,4 +114,7 @@ public enum SupportColor implements ColorFilter {
     public static int getBlue(int color) {
         return (color & 0xff);
     }
+
+
+    //public abstract  boolean isSame(int color);
 }

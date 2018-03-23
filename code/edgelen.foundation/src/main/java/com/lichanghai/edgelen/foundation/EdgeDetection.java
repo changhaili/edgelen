@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
  * Created by lichanghai on 2018/1/14.
  *
  * 试验品
- * 使用laplace滤波
+ * 请使用laplace滤波
  */
 @Deprecated
 public class EdgeDetection {

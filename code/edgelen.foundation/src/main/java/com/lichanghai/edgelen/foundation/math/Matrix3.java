@@ -24,6 +24,11 @@ public class Matrix3 {
 
     }
 
+    public Matrix3 copy(){
+
+        return new Matrix3(v00, v01, v02, v10, v11, v12, v20, v21, v22);
+    }
+
     public Matrix3(double v00, double v01, double v02, double v10, double v11, double v12, double v20, double v21,
                    double v22) {
 
@@ -91,7 +96,7 @@ public class Matrix3 {
         return new Point3(x, y, z);
     }
 
-    public Matrix3 t() {
+    public Matrix3 transpose() {
         return new Matrix3(v00, v10, v20,
                 v01, v11, v21,
                 v02, v12, v22);
@@ -126,12 +131,21 @@ public class Matrix3 {
 
         return new Matrix3(d00 / d, d01 / d, d02 / d,
                 d10 / d, d11 / d,
-                d12 / d, d20 / d, d21 / d, d22 / d).t();
+                d12 / d, d20 / d, d21 / d, d22 / d).transpose();
     }
 
     @Override
     public String toString() {
         return MessageFormat.format("{0},{1},{2} \n,{3}, {4}, {5}\n,{6}, {7}, {8},",
                 v00, v01, v02, v10, v11, v12, v20, v21, v22);
+    }
+
+    public double [][] toArray(){
+        return new double[][]{
+                {v00, v01, v02},
+                {v10, v11, v12},
+                {v20, v21, v22}
+
+        };
     }
 }

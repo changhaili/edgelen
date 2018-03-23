@@ -9,6 +9,8 @@ import com.lichanghai.edgelen.foundation.math.linefilter.AvgFilter;
 import com.lichanghai.edgelen.foundation.math.linefilter.Filter;
 import com.lichanghai.edgelen.foundation.math.linefilter.SampleFilter;
 import com.lichanghai.edgelen.foundation.utils.IntList;
+import org.apache.commons.math3.linear.LUDecomposition;
+import org.apache.commons.math3.linear.RealMatrix;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -523,6 +525,15 @@ public class MathUtils {
 
         return new IndexPixelHolder(pixelHolder.getWidth(), pixelHolder.getHeight(), list);
 
+    }
+
+    public static RealMatrix inverseMatrix(RealMatrix matrix) {
+        RealMatrix result = new LUDecomposition(matrix).getSolver().getInverse();
+        return result;
+    }
+
+    public static double getDet(RealMatrix matrix) {
+        return new LUDecomposition(matrix).getDeterminant();
     }
 
 }

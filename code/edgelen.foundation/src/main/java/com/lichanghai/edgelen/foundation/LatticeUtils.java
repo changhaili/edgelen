@@ -22,7 +22,7 @@ import java.util.List;
 public class LatticeUtils {
 
     private static IntList getBackBorders(final ImagePixelHolder pixelHolder,
-                                          final SupportColor backColor,
+                                          final PixelSeparator pixelSeparator,
                                           int borderWidth) {
 
         pixelHolder.attachFilter(new IntegerFilter() {
@@ -33,7 +33,7 @@ public class LatticeUtils {
                 int y = pixelHolder.getY(i);
                 int color = pixelHolder.getColor(x, y);
 
-                return backColor.isSame(color);
+                return pixelSeparator.isBack(color);
             }
         });
 
@@ -167,16 +167,32 @@ public class LatticeUtils {
         return new Rect4i(left - p, right + p, top - p, bottom + p);
     }
 
-    private static BackgroundState getBackground(ImagePixelHolder imagePixelHolder,
-                                                 final SupportColor backColor,
+    private static BackgroundState getBackground(final ImagePixelHolder imagePixelHolder,
+                                                 final PixelSeparator pixelSeparator,
                                                  double realWidth, double realHeight) {
 
 
-        IntList backBorderPixels = getBackBorders(imagePixelHolder, backColor, 100);
+        IntList backBorderPixels = getBackBorders(imagePixelHolder, pixelSeparator, 100);
 
         TimeRecord timeRecord = TimeRecord.begin();
 
-        AbstractPixelHolder pixelHolder = new DensityCluster(new IndexPixelHolder(imagePixelHolder.getWidth(),
+//        imagePixelHolder.attachFilter(new IntegerFilter() {
+//            @Override
+//            public boolean isSatisfied(int i) {
+//
+//                int x = imagePixelHolder.getX(i);
+//                int y = imagePixelHolder.getY(i);
+//                int color = imagePixelHolder.getColor(x, y);
+//
+//                return pixelSeparator.isBack(color);
+//            }
+//        });
+
+
+        //AbstractPixelHolder pixelHolder = new HierarchyCluster(imagePixelHolder).cluster(1)[0]; // TODO size
+
+
+        AbstractPixelHolder pixelHolder = new HierarchyCluster(new IndexPixelHolder(imagePixelHolder.getWidth(),
                 imagePixelHolder.getHeight(), backBorderPixels)).cluster(1)[0]; // TODO size
 
         ImageUtils.drawPoints("/Users/lichanghai/Mine/edgelen/images/back_cluster.jpg", pixelHolder);
@@ -231,12 +247,13 @@ public class LatticeUtils {
 
         }
 
-        ImageUtils.drawPoints("/Users/lichanghai/Mine/edgelen/images/rotate_45.jpg", new ArrayList<Point3>() {
-            {
-                addAll(Arrays.asList(topPoints));
-                addAll(Arrays.asList(bottomPoints));
-            }
-        });
+//        ImageUtils.drawPoints("/Users/lichanghai/Mine/edgelen/images/rotate_45.jpg", new ArrayList<Point3>() {
+//            {
+//                addAll(Arrays.asList(topPoints));
+//                addAll(Arrays.asList(bottomPoints));
+//            }
+//        });
+        // TODO
 
 
         Point3 topPoint = null;
@@ -325,7 +342,7 @@ public class LatticeUtils {
 
     private static EdgeCurve[] getEdgeCurves(final BackgroundState backgroundState,
                                              final ImagePixelHolder imagePixels,
-                                             final SupportColor foreColor,
+                                             final PixelSeparator pixelSeparator,
                                              final int clusterCount,
                                              final boolean hierarchyCluster) {
 
@@ -341,7 +358,7 @@ public class LatticeUtils {
 
                 int color = imagePixels.getColor(x, y);
 
-                boolean r = foreColor.isSame(color);
+                boolean r = pixelSeparator.isFore(color);
                 if (!r) return false;
 
                 int left = backgroundState.getLeftXs()[y];
@@ -378,11 +395,12 @@ public class LatticeUtils {
         return edgeHolders;
     }
 
+    //private static
+
     public static EdgeCurve[] getEdgeCurves(ImagePixelHolder pixelHolder,
                                             double realWidth,
                                             double realHeight,
-                                            SupportColor backColor,
-                                            SupportColor foreColor,
+                                            PixelSeparator pixelSeparator,
                                             int clusterCount,
                                             boolean hiericalCluster) {
 
@@ -390,10 +408,12 @@ public class LatticeUtils {
 
         // pixelColors = GaussianUtils.filter(pixelColors, width, height, 3,3);
 
-        BackgroundState backgroundState = getBackground(pixelHolder, backColor, realWidth, realHeight);
+        BackgroundState backgroundState = getBackground(pixelHolder, pixelSeparator, realWidth, realHeight);
         timeRecord.record("backgroundState time: {0}");
 
-        return getEdgeCurves(backgroundState, pixelHolder, foreColor, clusterCount, hiericalCluster);
+        return getEdgeCurves(backgroundState, pixelHolder, pixelSeparator, clusterCount, hiericalCluster);
     }
+
+
 
 }
