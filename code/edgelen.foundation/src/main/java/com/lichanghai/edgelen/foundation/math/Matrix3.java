@@ -4,9 +4,8 @@ import java.text.MessageFormat;
 
 /**
  * Created by lichanghai on 2018/2/9.
- *
  */
-public class Matrix3 {
+public class Matrix3 implements Matrix {
 
     public double v00, v01, v02;
 
@@ -20,11 +19,11 @@ public class Matrix3 {
             {0, 0, 1}
     });
 
-    public Matrix3(){
+    public Matrix3() {
 
     }
 
-    public Matrix3 copy(){
+    public Matrix3 copy() {
 
         return new Matrix3(v00, v01, v02, v10, v11, v12, v20, v21, v22);
     }
@@ -140,12 +139,89 @@ public class Matrix3 {
                 v00, v01, v02, v10, v11, v12, v20, v21, v22);
     }
 
-    public double [][] toArray(){
+    public double[][] toArray() {
         return new double[][]{
                 {v00, v01, v02},
                 {v10, v11, v12},
                 {v20, v21, v22}
 
         };
+    }
+
+    @Override
+    public int getRowCount() {
+        return 3;
+    }
+
+    @Override
+    public int getColumnCount() {
+        return 3;
+    }
+
+    @Override
+    public double getValue(int row, int column) {
+
+        int i = row * 3 + column;
+        switch (i) {
+            case 0:
+                return v00;
+            case 1:
+                return v01;
+            case 2:
+                return v02;
+
+            case 3:
+                return v10;
+            case 4:
+                return v11;
+            case 5:
+                return v12;
+
+            case 6:
+                return v20;
+            case 7:
+                return v21;
+            case 8:
+                return v22;
+        }
+        return 0;
+    }
+
+    @Override
+    public void setValue(int row, int column, double value) {
+
+        int i = row * 3 + column;
+        switch (i) {
+            case 0:
+                v00 = value;
+                break;
+            case 1:
+                v01 = value;
+                break;
+            case 2:
+                v02 = value;
+                break;
+
+            case 3:
+                v10 = value;
+                break;
+            case 4:
+                v11 = value;
+                break;
+            case 5:
+                v12 = value;
+                break;
+
+            case 6:
+                v20 = value;
+                break;
+            case 7:
+                v21 = value;
+                break;
+            case 8:
+                v22 = value;
+                break;
+        }
+
     }
 }

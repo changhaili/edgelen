@@ -27,7 +27,7 @@ public class GirthTest {
 
         SupportColor backColor = SupportColor.Red;
         SupportColor foreColor = SupportColor.White;
-        int clusterCount = 3;
+        int clusterCount = 4;
 
         final BufferedImage img = ImageIO.read(new File(imgPath));
 
@@ -65,8 +65,8 @@ public class GirthTest {
 
 
         EdgeCurve[] curves  = LatticeUtils.getEdgeCurves(pixelHolder, 1052, 730,
-                //new KmeansColorSeparator(pixelHolder, 100000)
-                new AbsoluteColorSeparator(backColor, foreColor)
+                new KmeansColorSeparator(pixelHolder, 500000)
+               // new AbsoluteColorSeparator(backColor, foreColor)
               , clusterCount, false);
 
         timeRecord.forceRecord("hierical time: {0}");

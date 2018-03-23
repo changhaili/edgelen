@@ -111,7 +111,7 @@ public class MathUtils {
 
         double sum = sadb + sbdc + sadc;
 
-        return (Math.abs(sabc - sum) / sabc )< .001;
+        return (Math.abs(sabc - sum) / sabc) < .001;
 
     }
 
@@ -191,7 +191,7 @@ public class MathUtils {
         for (Point3 pnt : pnts) {
 
             if (pnt == null) {
-               continue;
+                continue;
             }
 
             int x = (int) pnt.x;
@@ -295,7 +295,7 @@ public class MathUtils {
      *
      * @param matrix
      * @param pnt
-     * @return  pnt* matrix
+     * @return pnt* matrix
      */
     public static Point3 transform(Matrix3 matrix, Point3 pnt) {
 
@@ -417,7 +417,7 @@ public class MathUtils {
     /**
      * 移动到LeftTop
      * 转回直角坐标系统
-     *
+     * <p>
      * ....
      *
      * @param lt
@@ -536,4 +536,14 @@ public class MathUtils {
         return new LUDecomposition(matrix).getDeterminant();
     }
 
+    public static double sum(double... values) {
+
+        double t = 0;
+        for (double v : values) {
+            t += v;
+        }
+
+        return t;
+
+    }
 }

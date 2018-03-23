@@ -1,4 +1,4 @@
-package com.lichanghai.edgelen.foundation.gmm;
+package com.lichanghai.edgelen.foundation.cluster.gmm3;
 
 import com.lichanghai.edgelen.foundation.math.Matrix3;
 import com.lichanghai.edgelen.foundation.math.Point3;

@@ -192,7 +192,7 @@ public class LatticeUtils {
         //AbstractPixelHolder pixelHolder = new HierarchyCluster(imagePixelHolder).cluster(1)[0]; // TODO size
 
 
-        AbstractPixelHolder pixelHolder = new HierarchyCluster(new IndexPixelHolder(imagePixelHolder.getWidth(),
+        AbstractPixelHolder pixelHolder = new DensityCluster(new IndexPixelHolder(imagePixelHolder.getWidth(),
                 imagePixelHolder.getHeight(), backBorderPixels)).cluster(1)[0]; // TODO size
 
         ImageUtils.drawPoints("/Users/lichanghai/Mine/edgelen/images/back_cluster.jpg", pixelHolder);
