@@ -387,7 +387,8 @@ ImagePixelHolder pixelHolder = new ImagePixelHolder(1, new PixelImage() {
 });
 
 EdgeCurve[] curves  = LatticeUtils.getEdgeCurves(pixelHolder, 1052, 730,
-                                                 backColor, foreColor, clusterCount, false);
+               new KmeansColorSeparator(pixelHolder, 100000)
+              , clusterCount, false);
 
 for (EdgeCurve curve : curves) {
 
