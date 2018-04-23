@@ -3,7 +3,6 @@ package com.lichanghai.edgelen.foundation;
 import com.lichanghai.edgelen.foundation.cluster.kmeans.KMeans;
 import com.lichanghai.edgelen.foundation.cluster.kmeans.KMeansModel;
 import com.lichanghai.edgelen.foundation.math.Point2i;
-import com.lichanghai.edgelen.foundation.math.Point3;
 import com.lichanghai.edgelen.foundation.pixelholder.ImagePixelHolder;
 import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
