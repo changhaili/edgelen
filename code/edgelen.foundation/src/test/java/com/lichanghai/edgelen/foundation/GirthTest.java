@@ -63,10 +63,9 @@ public class GirthTest {
             }
         });
 
-
         EdgeCurve[] curves  = LatticeUtils.getEdgeCurves(pixelHolder, 1052, 730,
-                new KmeansColorSeparator(pixelHolder, 500000)
-               // new AbsoluteColorSeparator(backColor, foreColor)
+                // new KmeansColorSeparator(pixelHolder, 500000)
+               new AbsoluteColorSeparator(backColor, foreColor)
               , clusterCount, false);
 
         timeRecord.forceRecord("hierical time: {0}");
